@@ -1,0 +1,75 @@
+// ════════════════════════════════════════════════
+//  layout.component.scss
+// ════════════════════════════════════════════════
+
+$sidebar-width: 220px;
+$topbar-height: 60px;
+
+:host {
+  display: block;
+}
+
+/* ── Sidebar FIXE — couvre toute la hauteur ───── */
+app-sidebar {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: $sidebar-width;
+  height: 100vh;        /* ← toujours 100% de la fenêtre */
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 100;
+
+  /* Scrollbar invisible dans la sidebar */
+  &::-webkit-scrollbar { width: 0; }
+}
+
+/* ── Colonne droite ───────────────────────────── */
+.page-wrapper {
+  margin-left: $sidebar-width;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Topbar STICKY ────────────────────────────── */
+.topbar {
+  position: sticky;
+  top: 0;
+  height: $topbar-height;
+  flex-shrink: 0;
+  z-index: 50;
+  background: #fff;
+  border-bottom: 1px solid rgba(15,28,63,.08);
+  box-shadow: 0 1px 6px rgba(15,28,63,.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.75rem;
+
+  .topbar-title { font-size: 17px; font-weight: 700; color: #0f1c3f; }
+  .topbar-right { display: flex; align-items: center; gap: 10px; }
+
+  .topbar-user {
+    display: flex; align-items: center; gap: 9px;
+    background: #f1f4fb; border: 1px solid rgba(15,28,63,.08);
+    border-radius: 50px; padding: 4px 14px 4px 4px; cursor: pointer;
+
+    .topbar-avatar {
+      width: 30px; height: 30px;
+      background: linear-gradient(135deg, #1e4fc2, #7c3aed);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; color: #fff; font-weight: 700;
+    }
+    .topbar-uname { font-size: 13px; font-weight: 600; color: #0f1c3f; }
+  }
+}
+
+/* ── Contenu — scroll naturel du navigateur ✅ ── */
+.page-content {
+  flex: 1;
+  background: #f1f4fb;
+  /* Pas d'overflow — le navigateur scrolle naturellement */
+}

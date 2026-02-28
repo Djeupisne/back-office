@@ -1,0 +1,34 @@
+.topbar {
+  height: 64px;
+  background: white;
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.page-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a237e;
+}
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.user-name {
+  color: #495057;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+::ng-deep .topbar-avatar {
+  background: #1a237e !important;
+  color: white !important;
+  font-weight: 700 !important;
+}

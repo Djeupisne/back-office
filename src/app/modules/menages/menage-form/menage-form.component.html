@@ -1,0 +1,203 @@
+<div class="card">
+  <p-toast></p-toast>
+  <div class="page-header">
+    <h2><i class="pi pi-building"></i> {{ isEdit ? 'Modifier le ménage' : 'Nouveau ménage' }}</h2>
+    <p-button label="Retour" icon="pi pi-arrow-left"
+              styleClass="p-button-outlined p-button-secondary"
+              routerLink="/menages">
+    </p-button>
+  </div>
+
+  <div *ngIf="loading" class="text-center p-5">
+    <p-progressBar mode="indeterminate" [style]="{'height':'4px'}"></p-progressBar>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="!loading">
+
+    <!-- ✅ Chef de ménage -->
+    <div class="form-section" [formGroup]="chefGroup">
+      <h4 class="section-title"><i class="pi pi-id-card"></i> Chef de ménage</h4>
+
+      <div class="form-grid-2">
+        <div class="field">
+          <label>Numéro CNI <span class="required">*</span></label>
+          <input pInputText formControlName="numeroCni"
+                 placeholder="Ex: TG12345678" class="w-full"/>
+          <small class="p-error"
+                 *ngIf="chefGroup.get('numeroCni')?.invalid && chefGroup.get('numeroCni')?.touched">
+            Numéro CNI requis (min. 5 caractères)
+          </small>
+        </div>
+
+        <div class="field">
+          <label>Téléphone</label>
+          <input pInputText formControlName="telephone"
+                 placeholder="Ex: +228 90 00 00 00" class="w-full"/>
+        </div>
+
+        <div class="field">
+          <label>Nom <span class="required">*</span></label>
+          <input pInputText formControlName="nom" class="w-full"/>
+          <small class="p-error"
+                 *ngIf="chefGroup.get('nom')?.invalid && chefGroup.get('nom')?.touched">
+            Nom requis
+          </small>
+        </div>
+
+        <div class="field">
+          <label>Prénom <span class="required">*</span></label>
+          <input pInputText formControlName="prenom" class="w-full"/>
+          <small class="p-error"
+                 *ngIf="chefGroup.get('prenom')?.invalid && chefGroup.get('prenom')?.touched">
+            Prénom requis
+          </small>
+        </div>
+
+        <div class="field">
+          <label>Date de naissance <span class="required">*</span></label>
+          <p-calendar formControlName="dateNaissance"
+                      dateFormat="dd/mm/yy"
+                      [maxDate]="today"
+                      [showIcon]="true"
+                      placeholder="JJ/MM/AAAA"
+                      styleClass="w-full">
+          </p-calendar>
+          <small class="p-error"
+                 *ngIf="chefGroup.get('dateNaissance')?.invalid && chefGroup.get('dateNaissance')?.touched">
+            Date de naissance requise
+          </small>
+        </div>
+
+        <div class="field">
+          <label>Nationalité</label>
+          <input pInputText formControlName="nationalite" class="w-full"/>
+        </div>
+
+        <div class="field">
+          <label>Niveau de diplôme <span class="required">*</span></label>
+          <p-dropdown formControlName="niveauDiplome"
+                      [options]="niveauxDiplome"
+                      optionLabel="label"
+                      optionValue="value"
+                      styleClass="w-full">
+          </p-dropdown>
+        </div>
+
+        <div class="field">
+          <label>Tranche salariale <span class="required">*</span></label>
+          <p-dropdown formControlName="trancheSalariale"
+                      [options]="tranchesSalariales"
+                      optionLabel="label"
+                      optionValue="value"
+                      styleClass="w-full">
+          </p-dropdown>
+        </div>
+      </div>
+    </div>
+
+    <!-- Biens du ménage -->
+    <div class="form-section">
+      <h4 class="section-title"><i class="pi pi-shopping-bag"></i> Biens du ménage</h4>
+      <div class="biens-grid">
+        <div class="bien-item">
+          <p-checkbox formControlName="aTelevision" [binary]="true" inputId="tv"></p-checkbox>
+          <label for="tv">
+            <i class="pi pi-desktop"></i>
+            <span>Télévision</span>
+            <p-badge value="+5pts" severity="info"></p-badge>
+          </label>
+        </div>
+        <div class="bien-item">
+          <p-checkbox formControlName="aRadio" [binary]="true" inputId="radio"></p-checkbox>
+          <label for="radio">
+            <i class="pi pi-volume-up"></i>
+            <span>Radio</span>
+            <p-badge value="+5pts" severity="info"></p-badge>
+          </label>
+        </div>
+        <div class="bien-item">
+          <p-checkbox formControlName="aMoto" [binary]="true" inputId="moto"></p-checkbox>
+          <label for="moto">
+            <i class="pi pi-car"></i>
+            <span>Moto</span>
+            <p-badge value="+5pts" severity="info"></p-badge>
+          </label>
+        </div>
+        <div class="bien-item">
+          <p-checkbox formControlName="aVoiture" [binary]="true" inputId="voiture"></p-checkbox>
+          <label for="voiture">
+            <i class="pi pi-truck"></i>
+            <span>Voiture</span>
+            <p-badge value="+10pts" severity="success"></p-badge>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Logement -->
+    <div class="form-section">
+      <h4 class="section-title"><i class="pi pi-home"></i> Situation du logement</h4>
+      <div class="logement-choice">
+        <div class="radio-option"
+             [class.selected]="form.get('statutHabitation')?.value === 'PROPRIETAIRE'">
+          <p-radioButton formControlName="statutHabitation"
+                         value="PROPRIETAIRE" inputId="proprio">
+          </p-radioButton>
+          <label for="proprio">
+            <i class="pi pi-home"></i>
+            <div>
+              <strong>Propriétaire</strong>
+              <p-badge value="+20pts" severity="success"></p-badge>
+            </div>
+          </label>
+        </div>
+        <div class="radio-option"
+             [class.selected]="form.get('statutHabitation')?.value === 'LOCATAIRE'">
+          <p-radioButton formControlName="statutHabitation"
+                         value="LOCATAIRE" inputId="locataire">
+          </p-radioButton>
+          <label for="locataire">
+            <i class="pi pi-key"></i>
+            <div><strong>Locataire</strong></div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Localisation (optionnel) -->
+    <div class="form-section">
+      <h4 class="section-title"><i class="pi pi-map-marker"></i> Localisation</h4>
+      <div class="form-grid-2">
+        <div class="field">
+          <label>Région</label>
+          <input pInputText formControlName="region" class="w-full"/>
+        </div>
+        <div class="field">
+          <label>Ville</label>
+          <input pInputText formControlName="ville" class="w-full"/>
+        </div>
+        <div class="field">
+          <label>Quartier</label>
+          <input pInputText formControlName="quartier" class="w-full"/>
+        </div>
+        <div class="field">
+          <label>Adresse</label>
+          <input pInputText formControlName="adresse" class="w-full"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <p-button type="button" label="Annuler"
+                styleClass="p-button-outlined p-button-secondary"
+                routerLink="/menages">
+      </p-button>
+      <p-button type="submit"
+                [label]="isEdit ? 'Enregistrer les modifications' : 'Créer le ménage'"
+                icon="pi pi-save"
+                [loading]="saving">
+      </p-button>
+    </div>
+
+  </form>
+</div>

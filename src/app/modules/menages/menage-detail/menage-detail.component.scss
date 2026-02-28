@@ -1,0 +1,99 @@
+.detail-page { display: flex; flex-direction: column; gap: 1.5rem; }
+.header-actions { display: flex; gap: 0.75rem; }
+.detail-grid {
+  display: grid; grid-template-columns: 200px 1fr 1fr; gap: 1.5rem;
+  @media (max-width: 900px) { grid-template-columns: 1fr; }
+}
+.score-card { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.score-circle { width: 110px; height: 110px; border-radius: 50%; border: 6px solid; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.score-value { font-size: 2.2rem; font-weight: 800; line-height: 1; }
+.score-label { font-size: 0.75rem; color: #757575; }
+.section-title { margin: 0 0 1rem; color: #1a237e; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem; }
+.info-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;
+  span { color: #757575; font-size: 0.875rem; }
+  strong { font-size: 0.875rem; }
+}
+.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.card-title { margin: 0; font-size: 1rem; font-weight: 600; color: #1a237e; display: flex; align-items: center; gap: 0.5rem; }
+
+// ✅ BIENS — styles unifiés, ancienne version supprimée
+.biens-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.bien {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 12px;
+  border-radius: 12px;
+  border: 2px dashed #e2e8f0;
+  background: #f8fafc;
+  text-align: center;
+  transition: all .2s;
+  opacity: 1; // ✅ supprime l'opacity: 0.5 de l'ancienne version
+
+  .bien-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    background: #e2e8f0;
+    color: #94a3b8;
+  }
+
+  .bien-label { font-size: 13px; font-weight: 600; color: #94a3b8; }
+
+  .bien-pts {
+    font-size: 10px; font-weight: 700;
+    color: #cbd5e1; background: #f1f5f9;
+    padding: 2px 8px; border-radius: 20px;
+  }
+
+  .bien-status { font-size: 10px; color: #94a3b8; }
+
+  // ✅ Télévision — bleu
+  &.tv {
+    border: 2px solid #bfdbfe !important;
+    background: #eff6ff !important;
+    .bien-icon { background: #dbeafe; color: #2563eb; }
+    .bien-label { color: #1d4ed8; }
+    .bien-pts { background: #dbeafe; color: #2563eb; }
+    .bien-status { color: #3b82f6; font-weight: 600; }
+  }
+
+  // ✅ Radio — violet
+  &.radio {
+    border: 2px solid #ddd6fe !important;
+    background: #f5f3ff !important;
+    .bien-icon { background: #ede9fe; color: #7c3aed; }
+    .bien-label { color: #6d28d9; }
+    .bien-pts { background: #ede9fe; color: #7c3aed; }
+    .bien-status { color: #8b5cf6; font-weight: 600; }
+  }
+
+  // ✅ Moto — orange
+  &.moto {
+    border: 2px solid #fed7aa !important;
+    background: #fff7ed !important;
+    .bien-icon { background: #ffedd5; color: #ea580c; }
+    .bien-label { color: #c2410c; }
+    .bien-pts { background: #ffedd5; color: #ea580c; }
+    .bien-status { color: #f97316; font-weight: 600; }
+  }
+
+  // ✅ Voiture — vert
+  &.voiture {
+    border: 2px solid #bbf7d0 !important;
+    background: #f0fdf4 !important;
+    .bien-icon { background: #dcfce7; color: #16a34a; }
+    .bien-label { color: #15803d; }
+    .bien-pts { background: #dcfce7; color: #16a34a; }
+    .bien-status { color: #22c55e; font-weight: 600; }
+  }
+}

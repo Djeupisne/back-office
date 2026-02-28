@@ -1,0 +1,134 @@
+<div class="card">
+  <p-toast></p-toast>
+  <div class="page-header">
+    <h2><i class="pi pi-heart"></i> {{ isEdit ? 'Modifier le programme' : 'Nouveau programme' }}</h2>
+    <p-button label="Retour" icon="pi pi-arrow-left"
+              styleClass="p-button-outlined p-button-secondary"
+              routerLink="/programmes">
+    </p-button>
+  </div>
+
+  <div *ngIf="loading" class="text-center p-5">
+    <p-progressBar mode="indeterminate" [style]="{'height':'4px'}"></p-progressBar>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="!loading">
+
+    <!-- Infos générales -->
+    <div class="form-section">
+      <h4 class="section-title"><i class="pi pi-info-circle"></i> Informations générales</h4>
+      <div class="form-grid-2">
+
+        <div class="field" style="grid-column: 1 / -1">
+          <label>Nom du programme <span class="required">*</span></label>
+          <input pInputText formControlName="nom" class="w-full"
+                 placeholder="Ex: Programme alimentaire"/>
+          <small class="p-error"
+                 *ngIf="form.get('nom')?.invalid && form.get('nom')?.touched">
+            Nom requis
+          </small>
+        </div>
+
+        <div class="field" style="grid-column: 1 / -1">
+          <label>Description</label>
+          <textarea pInputTextarea formControlName="description"
+                    rows="3" class="w-full"
+                    placeholder="Décrivez le programme...">
+          </textarea>
+        </div>
+
+        <div class="field">
+          <label>Responsable</label>
+          <input pInputText formControlName="responsable" class="w-full"/>
+        </div>
+
+        <div class="field">
+          <label>Région</label>
+          <input pInputText formControlName="region" class="w-full"/>
+        </div>
+
+        <div class="field">
+          <label>Date de début</label>
+          <p-calendar formControlName="dateDebut" dateFormat="dd/mm/yy"
+                      [showIcon]="true" styleClass="w-full"></p-calendar>
+        </div>
+
+        <div class="field">
+          <label>Date de fin</label>
+          <p-calendar formControlName="dateFin" dateFormat="dd/mm/yy"
+                      [showIcon]="true" [minDate]="form.value.dateDebut"
+                      styleClass="w-full"></p-calendar>
+        </div>
+
+        <div class="field">
+          <label>Budget alloué (FCFA)</label>
+          <p-inputNumber formControlName="budgetAlloue"
+                         [useGrouping]="true" styleClass="w-full"
+                         placeholder="Ex: 5000000">
+          </p-inputNumber>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ✅ Critères d'éligibilité par score -->
+    <div class="form-section">
+      <h4 class="section-title"><i class="pi pi-filter"></i> Critères d'éligibilité</h4>
+
+      <div class="form-grid-2">
+
+        <!-- Raccourci catégorie prédéfinie -->
+        <div class="field" style="grid-column: 1 / -1">
+          <label>Catégorie prédéfinie <small class="text-color-secondary">(optionnel — remplit automatiquement les scores)</small></label>
+          <p-dropdown
+                  [options]="scoreCategories"
+                  optionLabel="label"
+                  placeholder="Sélectionner une catégorie..."
+                  styleClass="w-full"
+                  (onChange)="applyCategorie($event.value)"
+                  [showClear]="true">
+          </p-dropdown>
+        </div>
+
+        <div class="field">
+          <label>Score minimum <span class="required">*</span></label>
+          <p-inputNumber formControlName="scoreMinEligibilite"
+                         [min]="0" [max]="100"
+                         styleClass="w-full"
+                         placeholder="0">
+          </p-inputNumber>
+          <small class="p-error"
+                 *ngIf="form.get('scoreMinEligibilite')?.invalid && form.get('scoreMinEligibilite')?.touched">
+            Score minimum requis
+          </small>
+        </div>
+
+        <div class="field">
+          <label>Score maximum <span class="required">*</span></label>
+          <p-inputNumber formControlName="scoreMaxEligibilite"
+                         [min]="0" [max]="100"
+                         styleClass="w-full"
+                         placeholder="100">
+          </p-inputNumber>
+          <small class="p-error"
+                 *ngIf="form.get('scoreMaxEligibilite')?.invalid && form.get('scoreMaxEligibilite')?.touched">
+            Score maximum requis
+          </small>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <p-button type="button" label="Annuler"
+                styleClass="p-button-outlined p-button-secondary"
+                routerLink="/programmes">
+      </p-button>
+      <p-button type="submit"
+                [label]="isEdit ? 'Enregistrer les modifications' : 'Créer le programme'"
+                icon="pi pi-save" [loading]="saving">
+      </p-button>
+    </div>
+
+  </form>
+</div>

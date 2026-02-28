@@ -1,0 +1,66 @@
+<div class="card">
+  <p-toast></p-toast>
+  <p-confirmDialog></p-confirmDialog>
+
+  <div class="page-header">
+    <h2><i class="pi pi-users"></i> Résidents</h2>
+    <p-button label="Nouveau résident" icon="pi pi-user-plus" routerLink="nouveau"></p-button>
+  </div>
+
+  <div class="search-bar">
+    <span class="p-input-icon-left">
+      <i class="pi pi-search"></i>
+      <input pInputText [(ngModel)]="searchText" placeholder="Rechercher par nom, prénom ou CNI..." class="search-input"/>
+    </span>
+    <p-button icon="pi pi-refresh" styleClass="p-button-outlined" (onClick)="load()" pTooltip="Actualiser"></p-button>
+  </div>
+
+  <p-table [value]="filtered" [loading]="loading" [paginator]="true" [rows]="10"
+           [rowsPerPageOptions]="[10,25,50]" styleClass="p-datatable-gridlines p-datatable-striped p-datatable-sm"
+           [showCurrentPageReport]="true" currentPageReportTemplate="{first}-{last} sur {totalRecords}">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="nom">Nom & Prénom <p-sortIcon field="nom"></p-sortIcon></th>
+        <th>CNI</th>
+        <th>Date naissance</th>
+        <th>Nationalité</th>
+        <th>Diplôme</th>
+        <th>Tranche salariale</th>
+        <th>Rôle</th>
+        <th style="width:100px">Actions</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-r>
+      <tr>
+        <td>
+          <div class="resident-cell">
+            <div class="resident-avatar"><i class="pi pi-user"></i></div>
+            <div>
+              <div class="font-bold">{{ r.nom }} {{ r.prenom }}</div>
+              <small class="text-color-secondary">{{ r.nationalite }}</small>
+            </div>
+          </div>
+        </td>
+        <td><code>{{ r.numeroCni }}</code></td>
+        <td>{{ r.dateNaissance | date:'dd/MM/yyyy' }}</td>
+        <td>{{ r.nationalite }}</td>
+        <td>{{ r.diplome }}</td>
+        <td><small>{{ getTrancheLabel(r.trancheSalariale) }}</small></td>
+        <td><p-tag [value]="r.isChef ? 'Chef' : 'Résident'" [severity]="r.isChef ? 'success' : 'info'"></p-tag></td>
+        <td>
+          <p-button icon="pi pi-pencil" styleClass="p-button-text p-button-warning p-button-sm" [routerLink]="['edit', r.id]" pTooltip="Modifier"></p-button>
+          <p-button icon="pi pi-trash" styleClass="p-button-text p-button-danger p-button-sm" (onClick)="delete(r)" pTooltip="Supprimer"></p-button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="8" class="text-center p-5 text-color-secondary">
+        <i class="pi pi-users" style="font-size:2rem;display:block;margin-bottom:0.5rem"></i>
+        Aucun résident enregistré
+      </td></tr>
+    </ng-template>
+  </p-table>
+</div>

@@ -1,0 +1,32 @@
+<div class="otp-page">
+  <p-toast></p-toast>
+  <div class="otp-card">
+    <div class="otp-header">
+      <i class="pi pi-lock otp-icon"></i>
+      <h2>Vérification 2FA</h2>
+      <p *ngIf="twoFactorType === 'EMAIL_OTP'">
+        Un code à 6 chiffres a été envoyé à<br><strong>{{ email }}</strong>
+      </p>
+      <p *ngIf="twoFactorType === 'TOTP'">
+        Entrez le code de votre application<br><strong>Google Authenticator</strong>
+      </p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="otp-input-wrapper">
+        <p-inputOtp formControlName="code" [length]="6" [integerOnly]="true" styleClass="otp-input"></p-inputOtp>
+      </div>
+
+      <p-button type="submit" label="Vérifier le code" icon="pi pi-check"
+                styleClass="w-full p-button-lg" [loading]="loading"
+                [disabled]="form.invalid">
+      </p-button>
+    </form>
+
+    <div class="otp-back">
+      <a routerLink="/auth/login">
+        <i class="pi pi-arrow-left"></i> Retour à la connexion
+      </a>
+    </div>
+  </div>
+</div>

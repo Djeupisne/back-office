@@ -1,0 +1,109 @@
+// ════════════════════════════════════════════════
+//  programme-form.component.scss
+//
+//  Ce composant grandit librement.
+//  .page-content du layout scrolle pour lui.
+// ════════════════════════════════════════════════
+
+:host {
+  display: block;
+  width: 100%;
+  padding: 2rem 1.75rem;
+  /* PAS de height / overflow ici */
+}
+
+/* ── Carte centrée ──────────────────────────────── */
+.card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 2rem;
+  box-shadow: 0 2px 16px rgba(15,28,63,.07);
+  border: 1px solid rgba(15,28,63,.08);
+  max-width: 860px;
+  margin: 0 auto;       /* ← centrage horizontal */
+  /* Grandit avec le contenu → déclenche le scroll du parent */
+}
+
+/* ── En-tête ────────────────────────────────────── */
+.page-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 2rem; padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(15,28,63,.08);
+
+  h2 {
+    margin: 0; font-size: 1.25rem; font-weight: 700; color: #0f1c3f;
+    display: flex; align-items: center; gap: .6rem;
+    i { color: #e91e63; }
+  }
+}
+
+/* ── Sections ───────────────────────────────────── */
+.form-section {
+  margin-bottom: 1.5rem; padding: 1.5rem;
+  background: #f8faff; border-radius: 10px;
+  border-left: 3px solid #e91e63;
+}
+
+.section-title {
+  margin: 0 0 1.25rem; font-size: .92rem; font-weight: 700;
+  color: #e91e63; display: flex; align-items: center; gap: .5rem;
+}
+
+/* ── Champs ─────────────────────────────────────── */
+.field {
+  display: flex; flex-direction: column; gap: .35rem;
+  margin-bottom: 1.1rem;
+  &:last-child { margin-bottom: 0; }
+  label { font-size: .82rem; font-weight: 600; color: #475569; }
+}
+
+.required { color: #ef4444; margin-left: 2px; }
+
+.checkbox-row {
+  display: flex; align-items: center; gap: .6rem;
+  padding: .75rem 1rem; background: #fff;
+  border: 1px solid #dde3f0; border-radius: 9px; cursor: pointer;
+  transition: border-color .15s;
+  &:hover { border-color: #b0bcda; }
+  label { font-size: .85rem; font-weight: 500; color: #475569; cursor: pointer; margin: 0; }
+}
+
+.form-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;
+  @media (max-width: 700px) { grid-template-columns: 1fr; }
+}
+
+/* ── Actions ────────────────────────────────────── */
+.form-actions {
+  display: flex; justify-content: flex-end; align-items: center;
+  gap: .75rem; padding-top: 1.25rem; margin-top: .5rem;
+  border-top: 1px solid rgba(15,28,63,.08);
+}
+
+/* ── PrimeNG overrides ──────────────────────────── */
+::ng-deep {
+  .p-inputtext {
+    border-radius: 9px !important; border: 1px solid #dde3f0 !important;
+    font-size: .875rem !important; padding: .6rem .9rem !important; width: 100% !important;
+    &:enabled:focus { border-color: #1e4fc2 !important; box-shadow: 0 0 0 3px rgba(30,79,194,.12) !important; }
+    &.ng-invalid.ng-touched { border-color: #ef4444 !important; }
+  }
+  textarea.p-inputtextarea { border-radius: 9px !important; resize: vertical; min-height: 100px; }
+  .p-calendar {
+    width: 100% !important;
+    .p-inputtext { border-radius: 9px 0 0 9px !important; }
+    .p-datepicker-trigger { border-radius: 0 9px 9px 0 !important; background: #1e4fc2 !important; border-color: #1e4fc2 !important; }
+  }
+  .p-multiselect {
+    width: 100% !important; border-radius: 9px !important;
+    border: 1px solid #dde3f0 !important; font-size: .875rem !important;
+    &:not(.p-disabled).p-focus { border-color: #1e4fc2 !important; box-shadow: 0 0 0 3px rgba(30,79,194,.12) !important; }
+    .p-multiselect-label { padding: .6rem .9rem !important; }
+    &.ng-invalid.ng-touched { border-color: #ef4444 !important; }
+  }
+  .p-checkbox .p-checkbox-box {
+    border-radius: 6px !important;
+    &.p-highlight { background: #1e4fc2 !important; border-color: #1e4fc2 !important; }
+  }
+  .p-error { font-size: .74rem !important; color: #ef4444 !important; margin-top: 2px; }
+}

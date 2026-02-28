@@ -1,0 +1,20 @@
+/* src/app/modules/front-office/pages/mon-menage/mon-menage.component.css */
+.chef-row {
+  background-color: #fff3e0 !important;
+  font-weight: 500;
+}
+
+.chef-row td {
+  border-bottom: 2px solid #ffb74d !important;
+}
+
+.p-tag-sm {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .p-datatable {
+    font-size: 0.85rem;
+  }
+}

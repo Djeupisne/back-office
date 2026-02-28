@@ -1,0 +1,48 @@
+.otp-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a237e, #0d47a1);
+  padding: 1rem;
+}
+.otp-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+.otp-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  h2 { font-size: 1.6rem; font-weight: 700; color: #1a237e; margin: 0.75rem 0 0.5rem; }
+  p { color: #6c757d; line-height: 1.5; }
+}
+.otp-icon {
+  font-size: 3.5rem;
+  color: #1a237e;
+}
+.otp-input-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+::ng-deep .otp-input .p-inputotp-input {
+  width: 3rem !important;
+  height: 3.5rem !important;
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  border-radius: 8px !important;
+}
+.otp-back {
+  text-align: center;
+  margin-top: 1.5rem;
+  a {
+    color: #1a237e;
+    text-decoration: none;
+    font-size: 0.875rem;
+    &:hover { text-decoration: underline; }
+  }
+}

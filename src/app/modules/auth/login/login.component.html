@@ -1,0 +1,55 @@
+<div class="login-page">
+  <p-toast></p-toast>
+  <div class="login-left">
+    <div class="login-branding">
+      <i class="pi pi-shield brand-icon"></i>
+      <h1>Plateforme Sociale Togo</h1>
+      <p>Système de recensement et de classification des ménages vulnérables</p>
+      <div class="features">
+        <div class="feature"><i class="pi pi-check-circle"></i><span>Recensement des ménages</span></div>
+        <div class="feature"><i class="pi pi-check-circle"></i><span>Classification sociale automatique</span></div>
+        <div class="feature"><i class="pi pi-check-circle"></i><span>Programmes d'aide ciblés</span></div>
+        <div class="feature"><i class="pi pi-check-circle"></i><span>Authentification sécurisée 2FA</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="login-right">
+    <div class="login-card">
+      <div class="login-header">
+        <h2>Connexion Agent</h2>
+        <p>Accès réservé aux agents autorisés</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="field">
+          <label>Email</label>
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-envelope"></i>
+            <input pInputText formControlName="email" type="email"
+                   placeholder="agent@social.tg" class="w-full"/>
+          </span>
+          <small class="p-error" *ngIf="email?.invalid && email?.touched">Email invalide</small>
+        </div>
+
+        <div class="field">
+          <label>Mot de passe</label>
+          <p-password formControlName="password" placeholder="••••••••"
+                      [feedback]="false" [toggleMask]="true"
+                      styleClass="w-full" inputStyleClass="w-full">
+          </p-password>
+          <small class="p-error" *ngIf="password?.invalid && password?.touched">Mot de passe requis (min. 6 car.)</small>
+        </div>
+
+        <p-button type="submit" label="Se connecter" icon="pi pi-sign-in"
+                  styleClass="w-full p-button-lg" [loading]="loading">
+        </p-button>
+      </form>
+
+      <div class="login-footer">
+        <i class="pi pi-lock"></i>
+        <span>Connexion sécurisée avec authentification 2 facteurs</span>
+      </div>
+    </div>
+  </div>
+</div>

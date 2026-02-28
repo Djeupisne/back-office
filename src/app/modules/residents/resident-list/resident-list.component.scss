@@ -1,0 +1,6 @@
+.search-bar { display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1rem; }
+.search-input { width: 360px; }
+.resident-cell { display: flex; align-items: center; gap: 0.75rem; }
+.resident-avatar { width: 2rem; height: 2rem; border-radius: 50%; background: #e8f5e9; color: #388e3c; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+code { background: #f4f6f9; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; }
+::ng-deep .p-datatable .p-datatable-thead > tr > th { background: #1a237e !important; color: white !important; }

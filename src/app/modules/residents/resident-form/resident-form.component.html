@@ -1,0 +1,87 @@
+<div class="card">
+  <p-toast></p-toast>
+  <div class="page-header">
+    <h2><i class="pi pi-user-plus"></i> {{ isEdit ? 'Modifier le résident' : 'Nouveau résident' }}</h2>
+    <p-button label="Retour" icon="pi pi-arrow-left" styleClass="p-button-outlined p-button-secondary" routerLink="/residents"></p-button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <!-- Ménage -->
+    <div class="form-section">
+      <h4 class="section-title"><i class="pi pi-building"></i> Ménage de rattachement</h4>
+      <div class="field">
+        <label>Ménage <span class="required">*</span></label>
+        <p-dropdown formControlName="menageId" [options]="menages" optionLabel="label" optionValue="value"
+                    placeholder="Sélectionner un ménage" [filter]="true" filterBy="label" styleClass="w-full">
+        </p-dropdown>
+        <small class="p-error" *ngIf="form.get('menageId')?.invalid && form.get('menageId')?.touched">Ménage requis</small>
+      </div>
+    </div>
+
+    <!-- Identité -->
+    <div class="form-section">
+      <h4 class="section-title"><i class="pi pi-id-card"></i> Identité</h4>
+      <div class="form-grid">
+        <div class="field">
+          <label>Nom <span class="required">*</span></label>
+          <input pInputText formControlName="nom" placeholder="Nom de famille" class="w-full"/>
+          <small class="p-error" *ngIf="form.get('nom')?.invalid && form.get('nom')?.touched">Nom requis</small>
+        </div>
+        <div class="field">
+          <label>Prénom <span class="required">*</span></label>
+          <input pInputText formControlName="prenom" placeholder="Prénom" class="w-full"/>
+          <small class="p-error" *ngIf="form.get('prenom')?.invalid && form.get('prenom')?.touched">Prénom requis</small>
+        </div>
+        <div class="field">
+          <label>Numéro CNI <span class="required">*</span></label>
+          <input pInputText formControlName="numeroCni" placeholder="Ex: TG12345678" class="w-full"/>
+          <small class="p-error" *ngIf="form.get('numeroCni')?.invalid && form.get('numeroCni')?.touched">CNI requis</small>
+        </div>
+        <div class="field">
+          <label>Date de naissance <span class="required">*</span></label>
+          <p-calendar formControlName="dateNaissance" dateFormat="dd/mm/yy" [showIcon]="true"
+                      placeholder="JJ/MM/AAAA" styleClass="w-full">
+          </p-calendar>
+          <small class="p-error" *ngIf="form.get('dateNaissance')?.invalid && form.get('dateNaissance')?.touched">Date requise</small>
+        </div>
+        <div class="field">
+          <label>Nationalité <span class="required">*</span></label>
+          <input pInputText formControlName="nationalite" placeholder="Ex: Togolaise" class="w-full"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formation & revenus -->
+    <div class="form-section">
+      <h4 class="section-title"><i class="pi pi-book"></i> Formation & Revenus</h4>
+      <div class="form-grid">
+        <div class="field">
+          <label>Diplôme le plus élevé <span class="required">*</span></label>
+          <p-dropdown formControlName="niveauDiplome" [options]="diplomes" optionLabel="label" optionValue="value"
+                      placeholder="Sélectionner un diplôme" styleClass="w-full">
+          </p-dropdown>
+        </div>
+        <div class="field" *ngIf="showEstLettre">
+          <label>Lettré(e) ?</label>
+          <div class="flex align-items-center gap-2 mt-2">
+            <p-checkbox formControlName="estLettre" [binary]="true" inputId="lettre"></p-checkbox>
+            <label for="lettre">Cette personne sait lire et écrire</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Tranche salariale <span class="required">*</span></label>
+          <p-dropdown formControlName="trancheSalariale" [options]="tranches" optionLabel="label" optionValue="value"
+                      placeholder="Sélectionner une tranche" styleClass="w-full">
+          </p-dropdown>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <p-button type="button" label="Annuler" styleClass="p-button-outlined p-button-secondary" routerLink="/residents"></p-button>
+      <p-button type="submit" [label]="isEdit ? 'Enregistrer' : 'Ajouter le résident'"
+                icon="pi pi-save" [loading]="saving">
+      </p-button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,82 @@
+<!-- sidebar.component.html -->
+<!-- Ce fichier ne contient QUE la sidebar, rien d'autre -->
+
+<aside class="sidebar">
+
+  <!-- Logo -->
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <i class="pi pi-building"></i>
+    </div>
+    <div>
+      <span class="logo-title">GestionSociale</span>
+      <span class="logo-sub">Plateforme communautaire</span>
+    </div>
+  </div>
+
+  <!-- Menu AGENT -->
+  <div class="sidebar-section" *ngIf="isAgent">
+    <span class="sidebar-section-label">Navigation</span>
+    <ul class="layout-menu">
+      <li>
+        <a class="nav-item" routerLink="/dashboard" routerLinkActive="active-route">
+          <span class="nav-icon"><i class="pi pi-home"></i></span>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a class="nav-item" routerLink="/menages" routerLinkActive="active-route">
+          <span class="nav-icon"><i class="pi pi-users"></i></span>
+          <span>Ménages</span>
+        </a>
+      </li>
+      <li>
+        <a class="nav-item" routerLink="/programmes" routerLinkActive="active-route">
+          <span class="nav-icon"><i class="pi pi-chart-line"></i></span>
+          <span>Programmes sociaux</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Menu CHEF -->
+  <div class="sidebar-section" *ngIf="isChef">
+    <span class="sidebar-section-label">Mon espace</span>
+    <ul class="layout-menu">
+      <li>
+        <a class="nav-item" routerLink="/mon-menage" routerLinkActive="active-route">
+          <span class="nav-icon"><i class="pi pi-home"></i></span>
+          <span>Mon ménage</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="sidebar-spacer"></div>
+  <div class="nav-divider"></div>
+
+  <!-- Déconnexion -->
+  <div class="sidebar-section" style="padding-top: 0;">
+    <ul class="layout-menu">
+      <li>
+        <a class="nav-item nav-danger" (click)="authService.logout()" style="cursor:pointer">
+          <span class="nav-icon"><i class="pi pi-sign-out"></i></span>
+          <span>Déconnexion</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Carte utilisateur -->
+  <div class="sidebar-user">
+    <div class="user-avatar">{{ userInitial }}</div>
+    <div class="user-info">
+      <span class="user-name">{{ userName }}</span>
+      <span class="user-role">{{ userRole }}</span>
+    </div>
+    <div class="user-logout" (click)="authService.logout()" title="Se déconnecter">
+      <i class="pi pi-sign-out"></i>
+    </div>
+  </div>
+
+</aside>

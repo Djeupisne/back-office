@@ -1,0 +1,33 @@
+<aside class="sidebar-chef">
+    <!-- Logo -->
+    <div class="sidebar-chef-logo">
+        <i class="pi pi-home"></i>
+        <span>Mon Foyer</span>
+    </div>
+
+    <!-- Menu unique pour chef -->
+    <div class="sidebar-chef-menu">
+        <ul>
+            <li>
+                <a routerLink="/chef/mon-menage" routerLinkActive="active">
+                    <i class="pi pi-users"></i>
+                    <span>Mon ménage</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Profil et déconnexion -->
+    <div class="sidebar-chef-footer">
+        <div class="user-profile">
+            <div class="user-avatar">{{ userInitial }}</div>
+            <div class="user-info">
+                <span class="user-name">{{ userName }}</span>
+                <span class="user-role">Chef de ménage</span>
+            </div>
+        </div>
+        <button class="logout-btn" (click)="logout()" title="Déconnexion">
+            <i class="pi pi-sign-out"></i>
+        </button>
+    </div>
+</aside>

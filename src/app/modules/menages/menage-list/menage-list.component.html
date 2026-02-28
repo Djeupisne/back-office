@@ -1,0 +1,115 @@
+<div class="card">
+  <p-toast></p-toast>
+  <p-confirmDialog></p-confirmDialog>
+
+  <div class="page-header">
+    <h2><i class="pi pi-building"></i> Ménages</h2>
+    <p-button label="Nouveau ménage" icon="pi pi-plus" routerLink="nouveau"></p-button>
+  </div>
+
+  <div class="search-bar">
+    <span class="p-input-icon-left">
+      <i class="pi pi-search"></i>
+      <input pInputText [(ngModel)]="searchText"
+             placeholder="Rechercher par chef ou catégorie..."
+             class="search-input"/>
+    </span>
+    <p-button icon="pi pi-refresh" styleClass="p-button-outlined"
+              (onClick)="load()" pTooltip="Actualiser">
+    </p-button>
+  </div>
+
+  <p-table [value]="filtered" [loading]="loading"
+           [paginator]="true" [rows]="10"
+           [rowsPerPageOptions]="[10,25,50]"
+           styleClass="p-datatable-gridlines p-datatable-striped p-datatable-sm"
+           [showCurrentPageReport]="true"
+           currentPageReportTemplate="{first}-{last} sur {totalRecords} ménages">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Chef de ménage</th>
+        <th>Résidents</th>
+        <th pSortableColumn="score">Score <p-sortIcon field="score"></p-sortIcon></th>
+        <th>Catégorie sociale</th>
+        <th>Biens</th>
+        <th>Logement</th>
+        <th style="width:130px">Actions</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-m>
+      <tr>
+        <!-- ✅ getChefNom() à la place de m.chefNom -->
+        <td>
+          <div class="chef-cell">
+            <div class="chef-avatar"><i class="pi pi-user"></i></div>
+            <div>
+              <div class="font-bold">{{ getChefNom(m) }}</div>
+              <small class="text-color-secondary">{{ m.code }}</small>
+            </div>
+          </div>
+        </td>
+
+        <td class="text-center">
+          <p-badge [value]="(m.residents?.length ?? m.nombreResidents ?? 0).toString()"
+                   severity="info">
+          </p-badge>
+        </td>
+
+        <td class="text-center">
+          <span class="score-badge">{{ m.score }} pts</span>
+        </td>
+
+        <td>
+          <p-tag [value]="m.categorieLabel || categorieLabels[m.categorie || ''] || m.categorie || '-'"
+                 [severity]="$any(categorieSeverity[m.categorie || ''] || 'info')">
+          </p-tag>
+        </td>
+
+        <!-- ✅ aTelevision / aRadio / aMoto / aVoiture -->
+        <td>
+          <span class="biens">
+            <i class="pi pi-desktop"   [class.active]="m.aTelevision" pTooltip="Télévision"></i>
+            <i class="pi pi-volume-up" [class.active]="m.aRadio"      pTooltip="Radio"></i>
+            <i class="pi pi-car"       [class.active]="m.aMoto"       pTooltip="Moto"></i>
+            <i class="pi pi-truck"     [class.active]="m.aVoiture"    pTooltip="Voiture"></i>
+          </span>
+        </td>
+
+        <!-- ✅ statutHabitation à la place de isProprietaire -->
+        <td>
+          <p-tag
+                  [value]="m.statutHabitation === 'PROPRIETAIRE' ? 'Propriétaire' : 'Locataire'"
+                  [severity]="m.statutHabitation === 'PROPRIETAIRE' ? 'success' : 'warning'">
+          </p-tag>
+        </td>
+
+        <td>
+          <p-button icon="pi pi-eye"
+                    styleClass="p-button-text p-button-sm"
+                    [routerLink]="[m.id]" pTooltip="Voir">
+          </p-button>
+          <p-button icon="pi pi-pencil"
+                    styleClass="p-button-text p-button-warning p-button-sm"
+                    [routerLink]="['edit', m.id]" pTooltip="Modifier">
+          </p-button>
+          <p-button icon="pi pi-trash"
+                    styleClass="p-button-text p-button-danger p-button-sm"
+                    (onClick)="delete(m)" pTooltip="Supprimer">
+          </p-button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7" class="text-center p-5 text-color-secondary">
+          <i class="pi pi-inbox" style="font-size:2rem;display:block;margin-bottom:0.5rem"></i>
+          Aucun ménage enregistré
+        </td>
+      </tr>
+    </ng-template>
+
+  </p-table>
+</div>

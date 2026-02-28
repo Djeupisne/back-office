@@ -1,0 +1,30 @@
+<!-- layout.component.html -->
+
+<!--
+  Structure :
+  [app-sidebar fixe] | [page-wrapper colonne droite]
+                          [topbar fixe 60px]
+                          [page-content scrollable ✅]
+                              <router-outlet>
+-->
+
+<app-sidebar></app-sidebar>
+
+<div class="page-wrapper">
+
+    <header class="topbar">
+        <div class="topbar-title">{{ pageTitle }}</div>
+        <div class="topbar-right">
+            <div class="topbar-user">
+                <div class="topbar-avatar">{{ userInitial }}</div>
+                <span class="topbar-uname">{{ userName }}</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ✅ Seul cet élément scrolle -->
+    <div class="page-content">
+        <router-outlet></router-outlet>
+    </div>
+
+</div>

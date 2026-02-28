@@ -1,0 +1,12 @@
+<div class="topbar">
+  <div class="topbar-left">
+    <h4 class="page-title">{{ pageTitle }}</h4>
+  </div>
+  <div class="topbar-right">
+    <span class="user-name">{{ currentUser?.fullName }}</span>
+    <p-avatar [label]="currentUser?.fullName?.charAt(0) || 'U'"
+              shape="circle" size="normal"
+              styleClass="topbar-avatar">
+    </p-avatar>
+  </div>
+</div>

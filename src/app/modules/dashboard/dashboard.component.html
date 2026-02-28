@@ -1,0 +1,232 @@
+<!-- dashboard.component.html -->
+<div class="dashboard">
+
+  <!-- Message d'erreur -->
+  <div class="error-message" *ngIf="error">
+    <i class="pi pi-exclamation-triangle"></i>
+    <span>{{ error }}</span>
+  </div>
+
+  <!-- Stats cards -->
+  <div class="stats-grid">
+    <!-- Pour l'agent -->
+    <ng-container *ngIf="isAgent">
+      <div class="stat-card blue">
+        <div class="stat-icon"><i class="pi pi-building"></i></div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.totalMenages }}</span>
+          <span class="stat-label">Ménages recensés</span>
+        </div>
+      </div>
+
+      <div class="stat-card green">
+        <div class="stat-icon"><i class="pi pi-users"></i></div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.totalResidents }}</span>
+          <span class="stat-label">Résidents</span>
+        </div>
+      </div>
+
+      <div class="stat-card orange">
+        <div class="stat-icon"><i class="pi pi-heart"></i></div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.totalProgrammes }}</span>
+          <span class="stat-label">Programmes</span>
+        </div>
+      </div>
+
+      <div class="stat-card red">
+        <div class="stat-icon"><i class="pi pi-exclamation-triangle"></i></div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.tresVulnerables }}</span>
+          <span class="stat-label">Vulnérables</span>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Pour le chef -->
+    <ng-container *ngIf="isChefMenage && monMenage">
+      <div class="stat-card blue">
+        <div class="stat-icon"><i class="pi pi-home"></i></div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.totalMenages }}</span>
+          <span class="stat-label">Mon ménage</span>
+        </div>
+      </div>
+
+      <div class="stat-card green">
+        <div class="stat-icon"><i class="pi pi-users"></i></div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.totalResidents }}</span>
+          <span class="stat-label">Mes résidents</span>
+        </div>
+      </div>
+
+      <div class="stat-card orange">
+        <div class="stat-icon"><i class="pi pi-heart"></i></div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.totalProgrammes }}</span>
+          <span class="stat-label">Programmes</span>
+        </div>
+      </div>
+
+      <div class="stat-card purple">
+        <div class="stat-icon"><i class="pi pi-tag"></i></div>
+        <div class="stat-info">
+          <span class="stat-value">
+            <span class="badge" [ngClass]="'badge-' + getCategorieSeverity(monMenage.categorie)">
+              {{ getCategorieLabel(monMenage.categorie) }}
+            </span>
+          </span>
+          <span class="stat-label">Ma catégorie</span>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- Main grid -->
+  <div class="dashboard-grid">
+    <!-- Pour l'agent -->
+    <ng-container *ngIf="isAgent">
+      <!-- Graphique -->
+      <div class="card chart-card">
+        <h3 class="card-title">
+          <i class="pi pi-chart-pie"></i> Répartition par catégorie
+        </h3>
+        <div class="chart-wrapper" *ngIf="chartData && menages.length">
+          <p-chart type="doughnut" [data]="chartData" [options]="chartOptions" height="280"></p-chart>
+        </div>
+        <div class="no-data" *ngIf="!chartData || !menages.length">
+          <i class="pi pi-info-circle"></i> Aucune donnée
+        </div>
+      </div>
+
+      <!-- Liste des ménages -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title"><i class="pi pi-clock"></i> Ménages récents</h3>
+          <a routerLink="/menages" class="view-all">Voir tout</a>
+        </div>
+        <div class="skeleton-list" *ngIf="loading">
+          <p-skeleton height="3rem" *ngFor="let i of [1,2,3,4]" styleClass="mb-2"></p-skeleton>
+        </div>
+        <div class="menage-list" *ngIf="!loading">
+          <div class="menage-item" *ngFor="let m of recentMenages" [routerLink]="['/menages', m.id]">
+            <div class="menage-avatar"><i class="pi pi-home"></i></div>
+            <div class="menage-info">
+              <span class="menage-name">{{ getChefNom(m) }}</span>
+              <span class="menage-residents">{{ m.nombreResidents || 0 }} résident(s)</span>
+            </div>
+            <div class="menage-meta">
+              <p-tag [value]="getCategorieLabel(m.categorie)" [severity]="getCategorieSeverity(m.categorie)"></p-tag>
+            </div>
+          </div>
+          <div class="no-data" *ngIf="!recentMenages.length">
+            <i class="pi pi-inbox"></i> Aucun ménage
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Pour le chef -->
+    <ng-container *ngIf="isChefMenage">
+      <!-- Graphique -->
+      <div class="card chart-card">
+        <h3 class="card-title">
+          <i class="pi pi-chart-pie"></i> Composition de mon ménage
+        </h3>
+        <div class="chart-wrapper" *ngIf="chartData && monMenage">
+          <p-chart type="doughnut" [data]="chartData" [options]="chartOptions" height="280"></p-chart>
+        </div>
+        <div class="no-data" *ngIf="!monMenage">
+          <i class="pi pi-info-circle"></i> Ménage non trouvé
+        </div>
+      </div>
+
+      <!-- Détails du ménage -->
+      <div class="card" *ngIf="monMenage">
+        <h3 class="card-title"><i class="pi pi-home"></i> Détails de mon ménage</h3>
+        <div class="detail-list">
+          <div class="detail-row">
+            <span class="detail-label">Code ménage:</span>
+            <span class="detail-value">{{ monMenage.code || 'Non défini' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Chef de ménage:</span>
+            <span class="detail-value">{{ getChefNom(monMenage) }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Nombre de résidents:</span>
+            <span class="detail-value">{{ monMenage.nombreResidents || 0 }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Localisation:</span>
+            <span class="detail-value">{{ formatLocalisation(monMenage) || 'Non renseignée' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Score:</span>
+            <span class="detail-value">{{ monMenage.score || 0 }} pts</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Liste des résidents -->
+      <div class="card full-width" *ngIf="residents.length > 0">
+        <h3 class="card-title"><i class="pi pi-users"></i> Mes résidents</h3>
+        <table class="resident-table">
+          <thead>
+          <tr>
+            <th>N° CNI</th>
+            <th>Nom & Prénom</th>
+            <th>Âge</th>
+            <th>Chef</th>
+            <th>Diplôme</th>
+            <th>Tranche salariale</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let r of residents">
+            <td>{{ r.numeroCni }}</td>
+            <td>{{ getResidentNomComplet(r) }}</td>
+            <td>{{ getResidentAge(r) }} ans</td>
+            <td>
+                <span class="badge" [ngClass]="r.chef ? 'badge-success' : 'badge-secondary'">
+                  {{ r.chef ? 'Oui' : 'Non' }}
+                </span>
+            </td>
+            <td>{{ getDiplomeLabel(r.diplome) }}</td>
+            <td>{{ getTrancheSalarialeLabel(r.trancheSalariale) }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Message si aucun résident -->
+      <div class="card full-width" *ngIf="monMenage && residents.length === 0">
+        <div class="no-data">
+          <i class="pi pi-users"></i>
+          <p>Aucun résident enregistré pour ce ménage</p>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- Actions rapides pour l'agent -->
+  <div class="card" *ngIf="isAgent">
+    <h3 class="card-title"><i class="pi pi-bolt"></i> Actions rapides</h3>
+    <div class="quick-actions">
+      <a routerLink="/menages/nouveau" class="quick-action">
+        <i class="pi pi-plus-circle"></i><span>Nouveau ménage</span>
+      </a>
+      <a routerLink="/residents/nouveau" class="quick-action">
+        <i class="pi pi-user-plus"></i><span>Nouveau résident</span>
+      </a>
+      <a routerLink="/programmes/nouveau" class="quick-action">
+        <i class="pi pi-heart"></i><span>Nouveau programme</span>
+      </a>
+      <a routerLink="/menages" class="quick-action">
+        <i class="pi pi-list"></i><span>Liste des ménages</span>
+      </a>
+    </div>
+  </div>
+</div>

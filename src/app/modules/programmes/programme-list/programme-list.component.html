@@ -1,0 +1,113 @@
+<div class="card">
+  <p-toast></p-toast>
+  <p-confirmDialog></p-confirmDialog>
+
+  <div class="page-header">
+    <h2><i class="pi pi-heart"></i> Programmes Sociaux</h2>
+    <p-button label="Nouveau programme" icon="pi pi-plus" routerLink="nouveau"></p-button>
+  </div>
+
+  <div class="programmes-grid" *ngIf="!loading">
+    <div class="programme-card" *ngFor="let p of programmes">
+
+      <div class="programme-header">
+        <div class="programme-icon"><i class="pi pi-heart-fill"></i></div>
+        <div class="programme-status">
+          <p-tag [value]="p.actif ? 'Actif' : 'Inactif'"
+                 [severity]="p.actif ? 'success' : 'danger'">
+          </p-tag>
+        </div>
+      </div>
+
+      <h4 class="programme-title">{{ p.nom }}</h4>
+      <p class="programme-desc">{{ p.description }}</p>
+
+      <!-- ✅ Remplace categoriesEligibles par plage de score -->
+      <div class="programme-categories">
+        <small class="text-color-secondary">Critère d'éligibilité :</small>
+        <div class="cat-tags">
+          <p-tag [value]="getScoreRange(p)" severity="info" styleClass="cat-tag"></p-tag>
+        </div>
+      </div>
+
+      <div class="programme-dates">
+        <span>
+          <i class="pi pi-calendar"></i>
+          {{ p.dateDebut | date:'dd/MM/yyyy' }} → {{ p.dateFin | date:'dd/MM/yyyy' }}
+        </span>
+      </div>
+
+      <div class="programme-actions">
+        <p-button label="Ménages éligibles" icon="pi pi-list" size="small"
+                  styleClass="p-button-outlined" (onClick)="viewEligibles(p)">
+        </p-button>
+        <p-button icon="pi pi-pencil"
+                  styleClass="p-button-text p-button-warning p-button-sm"
+                  [routerLink]="['edit', p.id]" pTooltip="Modifier">
+        </p-button>
+        <p-button icon="pi pi-trash"
+                  styleClass="p-button-text p-button-danger p-button-sm"
+                  (onClick)="delete(p)" pTooltip="Supprimer">
+        </p-button>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="!programmes.length">
+      <i class="pi pi-heart"></i>
+      <h3>Aucun programme social</h3>
+      <p>Créez votre premier programme d'aide sociale</p>
+      <p-button label="Créer un programme" icon="pi pi-plus" routerLink="nouveau"></p-button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="programmes-grid">
+    <p-skeleton height="220px" *ngFor="let i of [1,2,3]" borderRadius="12px"></p-skeleton>
+  </div>
+</div>
+
+<!-- Dialog ménages éligibles -->
+<p-dialog [header]="'Ménages éligibles : ' + (selectedProgramme?.nom || '')"
+          [(visible)]="eligiblesDialogVisible"
+          [style]="{width:'800px'}" [modal]="true">
+
+  <div *ngIf="loadingEligibles" class="p-3">
+    <p-progressBar mode="indeterminate" [style]="{'height':'4px'}"></p-progressBar>
+  </div>
+
+  <p-table [value]="menagesEligibles"
+           styleClass="p-datatable-sm p-datatable-striped"
+           *ngIf="!loadingEligibles">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Chef de ménage</th>
+        <th>Score</th>
+        <th>Catégorie</th>
+        <th>Résidents</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-m>
+      <tr>
+        <td><strong>{{ m.chefNom }}</strong></td>
+        <td><span class="score-badge">{{ m.score }} pts</span></td>
+        <td>
+          <p-tag [value]="categorieLabels[m.categorie] || m.categorie"
+                 [severity]="$any(categorieSeverity[m.categorie] || 'info')">
+          </p-tag>
+        </td>
+        <td>{{ m.nombreResidents }}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4" class="text-center p-4">Aucun ménage éligible pour ce programme</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Fermer" icon="pi pi-times"
+              styleClass="p-button-outlined"
+              (onClick)="eligiblesDialogVisible=false">
+    </p-button>
+  </ng-template>
+</p-dialog>

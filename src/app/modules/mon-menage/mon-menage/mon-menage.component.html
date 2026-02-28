@@ -1,0 +1,159 @@
+<!-- src/app/modules/front-office/pages/mon-menage/mon-menage.component.html -->
+<div class="container mt-4">
+    <h2>Mon ménage</h2>
+
+    <!-- Loader -->
+    <div *ngIf="loading" class="flex justify-content-center p-5">
+        <p-progressSpinner></p-progressSpinner>
+    </div>
+
+    <!-- Message si aucun ménage -->
+    <div *ngIf="!loading && !menage" class="text-center p-5">
+        <p-message severity="warn" text="Aucun ménage trouvé pour votre compte"></p-message>
+    </div>
+
+    <!-- Affichage du ménage -->
+    <div *ngIf="menage">
+        <!-- Onglets -->
+        <p-tabView (onChange)="onTabChange($event)">
+            <!-- Onglet Informations -->
+            <p-tabPanel header="Informations du ménage">
+                <div class="grid">
+                    <!-- Informations générales -->
+                    <div class="col-12 md:col-6">
+                        <div class="card">
+                            <h3>Détails</h3>
+                            <div class="field">
+                                <label>Code ménage:</label>
+                                <p><strong>{{ menage.code || 'Non défini' }}</strong></p>
+                            </div>
+                            <div class="field">
+                                <label>Localisation:</label>
+                                <p>{{ menage.ville || 'Non définie' }}, {{ menage.quartier || 'Non défini' }}</p>
+                            </div>
+                            <div class="field">
+                                <label>Date d'enregistrement:</label>
+                                <p>{{ menage.dateCreation | date:'dd/MM/yyyy' || 'Non définie' }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Catégorie sociale -->
+                    <div class="col-12 md:col-6">
+                        <div class="card">
+                            <h3>Catégorie sociale</h3>
+                            <p-tag
+                                    [severity]="getCategorieSeverity(menage.categorie || '')"
+                                    [value]="getCategorieLabel(menage.categorie || '')"
+                                    styleClass="text-xl p-3">
+                            </p-tag>
+                            <p class="mt-3">Score: <strong>{{ menage.score || 0 }} points</strong></p>
+                            <p-progressBar [value]="getScorePercentage(menage.score)" [showValue]="false"></p-progressBar>
+                        </div>
+                    </div>
+
+                    <!-- Équipements -->
+                    <div class="col-12">
+                        <div class="card">
+                            <h3>Équipements</h3>
+                            <div class="grid">
+                                <div class="col-6 md:col-3">
+                                    <p-card>
+                                        <i class="pi pi-television" style="font-size: 2rem"></i>
+                                        <p>Télévision</p>
+                                        <p-tag
+                                                [severity]="menage.hasTv ? 'success' : 'danger'"
+                                                [value]="menage.hasTv ? 'Oui' : 'Non'">
+                                        </p-tag>
+                                    </p-card>
+                                </div>
+                                <div class="col-6 md:col-3">
+                                    <p-card>
+                                        <i class="pi pi-music" style="font-size: 2rem"></i>
+                                        <p>Radio</p>
+                                        <p-tag
+                                                [severity]="menage.hasRadio ? 'success' : 'danger'"
+                                                [value]="menage.hasRadio ? 'Oui' : 'Non'">
+                                        </p-tag>
+                                    </p-card>
+                                </div>
+                                <div class="col-6 md:col-3">
+                                    <p-card>
+                                        <i class="pi pi-car" style="font-size: 2rem"></i>
+                                        <p>Voiture</p>
+                                        <p-tag
+                                                [severity]="menage.hasCar ? 'success' : 'danger'"
+                                                [value]="menage.hasCar ? 'Oui' : 'Non'">
+                                        </p-tag>
+                                    </p-card>
+                                </div>
+                                <div class="col-6 md:col-3">
+                                    <p-card>
+                                        <i class="pi pi-motorcycle" style="font-size: 2rem"></i>
+                                        <p>Moto</p>
+                                        <p-tag
+                                                [severity]="menage.hasMotorcycle ? 'success' : 'danger'"
+                                                [value]="menage.hasMotorcycle ? 'Oui' : 'Non'">
+                                        </p-tag>
+                                    </p-card>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-tabPanel>
+
+            <!-- Onglet Résidents -->
+            <p-tabPanel header="Résidents">
+                <div class="card">
+                    <p-table
+                            [value]="residents"
+                            styleClass="p-datatable-sm"
+                            [loading]="loadingResidents"
+                            [rows]="10"
+                            [paginator]="true"
+                            [showCurrentPageReport]="true">
+
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>CNI</th>
+                                <th>Nationalité</th>
+                                <th>Diplôme</th>
+                                <th>Âge</th>
+                                <th>Salaire</th>
+                                <th>Rôle</th>
+                            </tr>
+                        </ng-template>
+
+                        <ng-template pTemplate="body" let-resident>
+                            <tr>
+                                <td>{{ resident.nom || '-' }}</td>
+                                <td>{{ resident.prenom || '-' }}</td>
+                                <td>{{ resident.numeroCni || '-' }}</td>
+                                <td>{{ resident.nationalite || '-' }}</td>
+                                <td>{{ resident.diplome || 'Aucun' }}</td>
+                                <td>{{ getAge(resident.dateNaissance) }} ans</td>
+                                <td>{{ resident.salaire ? (resident.salaire | currency:'FCFA':'symbol':'1.0-0') : '-' }}</td>
+                                <td>
+                                    <p-tag
+                                            *ngIf="resident.estChef"
+                                            value="Chef de ménage"
+                                            severity="warning">
+                                    </p-tag>
+                                </td>
+                            </tr>
+                        </ng-template>
+
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="8" class="text-center">Aucun résident trouvé</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+</div>
