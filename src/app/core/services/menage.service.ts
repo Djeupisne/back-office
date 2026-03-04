@@ -5,54 +5,50 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Menage, MenageRequest } from '../models/menage.model';
 import { Resident } from '../models/resident.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class MenageService {
 
-  // FIX — Gateway /api/main/** StripPrefix=2 => main-service recoit /api/v1/menages
-  private readonly API = '/api/main/api/v1/menages';
+  // ✅ CORRECTION: Utilisation de l'API Gateway avec le chemin /api/v1/menages
+  private readonly BASE_URL = environment.mainUrl + '/api/v1/menages';
 
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<Menage[]> {
-    return this.http.get<any>(this.API).pipe(
-      map(r => r.content ?? r)  // gere Page<> et List<>
+    return this.http.get<any>(this.BASE_URL).pipe(
+      map(r => r.content ?? r)  // gère Page<> et List<>
     );
   }
 
   getById(id: string): Observable<Menage> {
-    return this.http.get<Menage>(`${this.API}/${id}`);
+    return this.http.get<Menage>(`${this.BASE_URL}/${id}`);
   }
 
   getByCode(code: string): Observable<Menage> {
-    return this.http.get<Menage>(`${this.API}/code/${code}`);
+    return this.http.get<Menage>(`${this.BASE_URL}/code/${code}`);
   }
 
   getResidents(menageId: string): Observable<Resident[]> {
-    return this.http.get<Resident[]>(`${this.API}/${menageId}/residents`);
+    return this.http.get<Resident[]>(`${this.BASE_URL}/${menageId}/residents`);
   }
 
   getByCategorie(categorie: string): Observable<Menage[]> {
-    return this.http.get<Menage[]>(`${this.API}/categorie/${categorie}`);
+    return this.http.get<Menage[]>(`${this.BASE_URL}/categorie/${categorie}`);
   }
 
   create(menage: MenageRequest): Observable<Menage> {
-    return this.http.post<Menage>(this.API, menage);
+    return this.http.post<Menage>(this.BASE_URL, menage);
   }
 
   update(id: string, menage: MenageRequest): Observable<Menage> {
-    return this.http.put<Menage>(`${this.API}/${id}`, menage);
+    return this.http.put<Menage>(`${this.BASE_URL}/${id}`, menage);
   }
 
-  // RESTAURE: delete() utilise par menage-list.component.ts
-  // Note: l'endpoint DELETE n'est pas declare dans MenageController.java
-  // Si 404, il faudra l'ajouter cote backend
   delete(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.API}/${id}`);
+    return this.http.delete<void>(`${this.BASE_URL}/${id}`);
   }
 
-  // RESTAURE: getMenageByChef() attend un userId et redirige vers getById()
-  // car /by-chef/{id} n'existe pas cote backend
   getMenageByChef(userId: string): Observable<Menage> {
     return this.getById(userId);
   }
