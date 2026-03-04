@@ -1,5 +1,5 @@
 // src/environments/environment.ts
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:9000'  // URL de votre backend
+  apiUrl: 'https://special-xylophone-9754wxv4qqr7c9pw6-8081.app.github.dev'
 };

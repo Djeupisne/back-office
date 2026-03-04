@@ -9,11 +9,7 @@ import { environment } from '../../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  // ✅ CORRECTION: Le bon endpoint est /api/v1/auth (pas /auth-api/v1/auth)
-  // D'après le test curl réussi: http://localhost:9000/api/v1/auth/login
-  private readonly AUTH_URL = '/auth-api/auth';
-  // Alternative si vous utilisez un proxy:
-  // private readonly AUTH_URL = '/auth-api/v1/auth';
+  private readonly AUTH_URL = environment.apiUrl + '/api/v1/auth';
   
   private readonly USER_KEY = 'user';
   private readonly TEMP_KEY = 'tempAuth';
@@ -26,28 +22,21 @@ export class AuthService {
   login(request: LoginRequest): Observable<AuthResponse> {
     console.log('🔑 Tentative de login:', request.email);
     
-    // ✅ CORRECTION: URL complète avec le bon chemin
     return this.http.post<AuthResponse>(`${this.AUTH_URL}/login`, request).pipe(
       tap({
         next: (response) => {
           console.log('📦 Réponse login reçue:', response);
           
-          // ✅ CORRECTION: Utilisation correcte des champs de la réponse
-          // D'après la réponse curl, les champs sont: 
-          // userId, email, fullName, role, accessToken, refreshToken, requiresTwoFactor
-          
           if (response.requiresTwoFactor) {
-            // Cas 2FA requis
             if (response.email) {
               const tempData: TempAuthData = {
                 email: response.email,
-                twoFactorType: 'EMAIL' // ou récupérer depuis response.twoFactorType si disponible
+                twoFactorType: 'EMAIL'
               };
               localStorage.setItem(this.TEMP_KEY, JSON.stringify(tempData));
               this.router.navigate(['/auth/2fa-verify']);
             }
           } else {
-            // Connexion directe réussie
             this.handleAuthResponse(response);
           }
         },
@@ -65,7 +54,6 @@ export class AuthService {
   }
 
   verifyOtp(request: TwoFaVerifyRequest): Observable<AuthResponse> {
-    // ✅ CORRECTION: URL pour la vérification 2FA
     return this.http.post<AuthResponse>(`${this.AUTH_URL}/2fa/verify`, request).pipe(
       tap({ 
         next: (response) => this.handleAuthResponse(response),
@@ -75,14 +63,12 @@ export class AuthService {
   }
 
   private handleAuthResponse(response: AuthResponse): void {
-    // ✅ CORRECTION: Validation améliorée des champs requis
     if (!response.userId || !response.accessToken) {
       console.error('❌ Réponse invalide - userId ou accessToken manquant', response);
       this.clearTempData();
       return;
     }
 
-    // ✅ CORRECTION: Création de la session utilisateur avec tous les champs disponibles
     const session: UserSession = {
       userId: response.userId,
       email: response.email || '',
@@ -92,12 +78,10 @@ export class AuthService {
       refreshToken: response.refreshToken || ''
     };
 
-    // Stockage de la session
     localStorage.setItem(this.USER_KEY, JSON.stringify(session));
     this.clearTempData();
     this.currentUserSubject.next(session);
 
-    // ✅ CORRECTION: Redirection basée sur le rôle
     console.log('✅ Connexion réussie pour:', session.email, 'Rôle:', session.role);
     
     if (session.role === 'AGENT') {
@@ -154,12 +138,10 @@ export class AuthService {
       
       const user = JSON.parse(stored) as UserSession;
       
-      // ✅ CORRECTION: Validation stricte des données stockées
       if (user?.userId && user?.accessToken) {
         return user;
       }
       
-      // Données invalides, on nettoie
       console.warn('Données utilisateur invalides détectées, nettoyage...');
       localStorage.removeItem(this.USER_KEY);
       return null;
