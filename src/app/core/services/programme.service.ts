@@ -10,7 +10,7 @@ export class ProgrammeService {
 
   // ✅ CORRECTION: Utilisation de l'API Gateway avec le chemin /api/v1/programmes
   // src/app/core/services/programme.service.ts
-private readonly BASE_URL = environment.adminUrl + '/api/v1/programmes';
+private readonly BASE_URL = environment.apiUrl + '/api/v1/programmes';
 
   constructor(private http: HttpClient) {}
 

@@ -10,8 +10,8 @@ export class ResidentService {
 
   // ✅ CORRECTION: Utilisation de l'API Gateway avec les chemins /api/v1/residents et /api/v1/menages
   // src/app/core/services/resident.service.ts
-private readonly RESIDENTS_URL = environment.mainUrl + '/api/v1/residents';
-private readonly MENAGES_URL = environment.mainUrl + '/api/v1/menages';
+private readonly RESIDENTS_URL = environment.apiUrl + '/api/v1/residents';
+private readonly MENAGES_URL = environment.apiUrl + '/api/v1/menages';
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<Resident[]> {

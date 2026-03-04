@@ -8,8 +8,7 @@ import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-
-  private readonly AUTH_URL = environment.authUrl + '/api/v1/auth';
+private readonly AUTH_URL = '/auth-api/v1/auth';
   
   private readonly USER_KEY = 'user';
   private readonly TEMP_KEY = 'tempAuth';

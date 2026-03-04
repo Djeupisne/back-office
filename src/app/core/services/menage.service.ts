@@ -11,7 +11,7 @@ import { environment } from '../../../environments/environment';
 export class MenageService {
 
   // ✅ CORRECTION: Utilisation de l'API Gateway avec le chemin /api/v1/menages
-  private readonly BASE_URL = environment.mainUrl + '/api/v1/menages';
+ private readonly BASE_URL = environment.apiUrl + '/api/v1/menages';
 
   constructor(private http: HttpClient) {}
 
