@@ -4,11 +4,17 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { AuthResponse, LoginRequest, TwoFaVerifyRequest, UserSession, TempAuthData } from '../models/auth.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  private readonly AUTH_URL = '/api/v1/auth';
+  // ✅ CORRECTION: Le bon endpoint est /api/v1/auth (pas /auth-api/v1/auth)
+  // D'après le test curl réussi: http://localhost:9000/api/v1/auth/login
+  private readonly AUTH_URL = '/auth-api/auth';
+  // Alternative si vous utilisez un proxy:
+  // private readonly AUTH_URL = '/auth-api/v1/auth';
+  
   private readonly USER_KEY = 'user';
   private readonly TEMP_KEY = 'tempAuth';
 
@@ -17,177 +23,148 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  /**
-   * Connexion utilisateur
-   */
   login(request: LoginRequest): Observable<AuthResponse> {
     console.log('🔑 Tentative de login:', request.email);
-
+    
+    // ✅ CORRECTION: URL complète avec le bon chemin
     return this.http.post<AuthResponse>(`${this.AUTH_URL}/login`, request).pipe(
       tap({
         next: (response) => {
-          console.log('📦 Réponse login:', response);
-
-          if (response.twoFactorRequired) {
-            // Stocker les données temporaires pour la 2FA
-            if (response.email && response.tempToken) {
+          console.log('📦 Réponse login reçue:', response);
+          
+          // ✅ CORRECTION: Utilisation correcte des champs de la réponse
+          // D'après la réponse curl, les champs sont: 
+          // userId, email, fullName, role, accessToken, refreshToken, requiresTwoFactor
+          
+          if (response.requiresTwoFactor) {
+            // Cas 2FA requis
+            if (response.email) {
               const tempData: TempAuthData = {
                 email: response.email,
-                tempToken: response.tempToken,
-                twoFactorType: response.twoFactorType || 'APP'
+                twoFactorType: 'EMAIL' // ou récupérer depuis response.twoFactorType si disponible
               };
               localStorage.setItem(this.TEMP_KEY, JSON.stringify(tempData));
               this.router.navigate(['/auth/2fa-verify']);
             }
           } else {
-            // Connexion directe sans 2FA
+            // Connexion directe réussie
             this.handleAuthResponse(response);
           }
         },
         error: (error) => {
-          console.error('❌ Erreur login:', error);
-          // Réinitialiser en cas d'erreur
+          console.error('❌ Erreur login détaillée:', {
+            status: error.status,
+            message: error.message,
+            url: error.url,
+            error: error.error
+          });
           this.clearTempData();
         }
       })
     );
   }
 
-  /**
-   * Vérification du code 2FA
-   */
   verifyOtp(request: TwoFaVerifyRequest): Observable<AuthResponse> {
-    console.log('🔐 Vérification 2FA pour:', request.email);
-
+    // ✅ CORRECTION: URL pour la vérification 2FA
     return this.http.post<AuthResponse>(`${this.AUTH_URL}/2fa/verify`, request).pipe(
-      tap({
-        next: (response) => {
-          console.log('✅ Réponse 2FA:', response);
-          this.handleAuthResponse(response);
-        },
-        error: (error) => {
-          console.error('❌ Erreur 2FA:', error);
-        }
+      tap({ 
+        next: (response) => this.handleAuthResponse(response),
+        error: (error) => console.error('Erreur vérification 2FA:', error)
       })
     );
   }
 
-  /**
-   * Traite la réponse d'authentification et crée la session
-   */
   private handleAuthResponse(response: AuthResponse): void {
-    // Vérifier que les données nécessaires sont présentes
+    // ✅ CORRECTION: Validation améliorée des champs requis
     if (!response.userId || !response.accessToken) {
-      console.error('Réponse d\'authentification invalide - données manquantes', response);
+      console.error('❌ Réponse invalide - userId ou accessToken manquant', response);
       this.clearTempData();
       return;
     }
 
-    // Créer la session utilisateur
+    // ✅ CORRECTION: Création de la session utilisateur avec tous les champs disponibles
     const session: UserSession = {
       userId: response.userId,
-      email: response.email,
+      email: response.email || '',
       fullName: response.fullName || '',
-      role: response.role || 'USER',
+      role: response.role ? String(response.role) : 'USER',
       accessToken: response.accessToken,
       refreshToken: response.refreshToken || ''
     };
 
-    // Sauvegarder et mettre à jour
+    // Stockage de la session
     localStorage.setItem(this.USER_KEY, JSON.stringify(session));
     this.clearTempData();
     this.currentUserSubject.next(session);
 
-    // 🔥 REDIRECTION SELON LE RÔLE 🔥
+    // ✅ CORRECTION: Redirection basée sur le rôle
+    console.log('✅ Connexion réussie pour:', session.email, 'Rôle:', session.role);
+    
     if (session.role === 'AGENT') {
-      console.log('👤 Agent connecté, redirection vers /agent/dashboard');
       this.router.navigate(['/agent/dashboard']);
     } else if (session.role === 'CHEF_MENAGE') {
-      console.log('🏠 Chef de ménage connecté, redirection vers /chef/mon-menage');
       this.router.navigate(['/chef/mon-menage']);
     } else {
-      console.warn('⚠️ Rôle inconnu, redirection par défaut');
       this.router.navigate(['/dashboard']);
     }
   }
 
-  /**
-   * Récupère les données temporaires pour la 2FA
-   */
   getTempAuthData(): TempAuthData | null {
-    try {
-      const data = localStorage.getItem(this.TEMP_KEY);
-      return data ? JSON.parse(data) : null;
+    try { 
+      const data = localStorage.getItem(this.TEMP_KEY); 
+      return data ? JSON.parse(data) : null; 
     } catch {
-      return null;
+      console.error('Erreur parsing tempAuth data');
+      return null; 
     }
   }
 
-  /**
-   * Efface les données temporaires
-   */
-  private clearTempData(): void {
-    localStorage.removeItem(this.TEMP_KEY);
+  private clearTempData(): void { 
+    localStorage.removeItem(this.TEMP_KEY); 
   }
 
-  /**
-   * Déconnexion
-   */
   logout(): void {
-    console.log('🚪 Déconnexion');
+    console.log('🚪 Déconnexion utilisateur');
     localStorage.removeItem(this.USER_KEY);
     this.clearTempData();
     this.currentUserSubject.next(null);
     this.router.navigate(['/auth/login']);
   }
 
-  /**
-   * Récupère le token d'accès
-   */
-  getToken(): string | null {
-    return this.getStoredUser()?.accessToken ?? null;
+  getToken(): string | null { 
+    return this.getStoredUser()?.accessToken ?? null; 
   }
 
-  /**
-   * Vérifie si l'utilisateur est authentifié
-   */
-  isAuthenticated(): boolean {
-    return !!this.getStoredUser();
+  isAuthenticated(): boolean { 
+    return !!this.getStoredUser(); 
   }
 
-  /**
-   * Récupère le rôle de l'utilisateur
-   */
-  getRole(): string | null {
-    return this.getStoredUser()?.role ?? null;
+  getRole(): string | null { 
+    return this.getStoredUser()?.role ?? null; 
   }
 
-  /**
-   * Récupère l'utilisateur courant
-   */
-  getCurrentUser(): UserSession | null {
-    return this.currentUserSubject.value;
+  getCurrentUser(): UserSession | null { 
+    return this.currentUserSubject.value; 
   }
 
-  /**
-   * Récupère l'utilisateur stocké dans localStorage
-   */
   private getStoredUser(): UserSession | null {
     try {
       const stored = localStorage.getItem(this.USER_KEY);
       if (!stored) return null;
-
+      
       const user = JSON.parse(stored) as UserSession;
-
-      // Vérifier que l'objet a la structure attendue
-      if (user && user.userId && user.accessToken) {
+      
+      // ✅ CORRECTION: Validation stricte des données stockées
+      if (user?.userId && user?.accessToken) {
         return user;
       }
-
+      
       // Données invalides, on nettoie
+      console.warn('Données utilisateur invalides détectées, nettoyage...');
       localStorage.removeItem(this.USER_KEY);
       return null;
-    } catch {
+    } catch (error) {
+      console.error('Erreur parsing stored user:', error);
       localStorage.removeItem(this.USER_KEY);
       return null;
     }

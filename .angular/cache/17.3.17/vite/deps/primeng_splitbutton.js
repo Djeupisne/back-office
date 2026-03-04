@@ -6,21 +6,8 @@ import {
   TooltipModule
 } from "./chunk-II4BA7CC.js";
 import {
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-EMW6JW23.js";
-import {
   ChevronDownIcon
 } from "./chunk-GCSPYW4A.js";
-import {
-  animate,
-  style,
-  transition,
-  trigger
-} from "./chunk-DRC22FPP.js";
-import "./chunk-FGIJWRIL.js";
-import "./chunk-2DJJH5CC.js";
 import {
   ButtonDirective,
   ButtonModule
@@ -34,11 +21,24 @@ import {
   AutoFocus,
   AutoFocusModule
 } from "./chunk-VY5JYO67.js";
-import "./chunk-XKKAC6OT.js";
 import {
   ConnectedOverlayScrollHandler,
   DomHandler
 } from "./chunk-JZQAVOZS.js";
+import "./chunk-XKKAC6OT.js";
+import {
+  animate,
+  style,
+  transition,
+  trigger
+} from "./chunk-DRC22FPP.js";
+import {
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-EMW6JW23.js";
+import "./chunk-FGIJWRIL.js";
+import "./chunk-2DJJH5CC.js";
 import {
   OverlayService,
   PrimeNGConfig,

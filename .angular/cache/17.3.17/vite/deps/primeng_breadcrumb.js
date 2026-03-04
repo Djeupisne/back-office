@@ -3,20 +3,20 @@ import {
   TooltipModule
 } from "./chunk-II4BA7CC.js";
 import {
+  ChevronRightIcon
+} from "./chunk-PTZWAPSV.js";
+import "./chunk-JZQAVOZS.js";
+import {
+  BaseIcon
+} from "./chunk-XKKAC6OT.js";
+import {
   Router,
   RouterLink,
   RouterLinkActive,
   RouterModule
 } from "./chunk-EMW6JW23.js";
-import {
-  ChevronRightIcon
-} from "./chunk-PTZWAPSV.js";
 import "./chunk-FGIJWRIL.js";
 import "./chunk-2DJJH5CC.js";
-import {
-  BaseIcon
-} from "./chunk-XKKAC6OT.js";
-import "./chunk-JZQAVOZS.js";
 import {
   PrimeTemplate,
   SharedModule

@@ -1,3 +1,4 @@
+// src/app/modules/menages/menage-list/menage-list.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -10,14 +11,13 @@ import { Menage, CATEGORIE_LABELS, CATEGORIE_SEVERITY, getChefNom } from '../../
   styleUrls: ['./menage-list.component.scss']
 })
 export class MenageListComponent implements OnInit {
-  menages: Menage[] = [];
-  loading = true;
+  menages:   Menage[] = [];
+  loading    = true;
   searchText = '';
+
   categorieLabels   = CATEGORIE_LABELS;
   categorieSeverity = CATEGORIE_SEVERITY;
-
-  // ✅ Expose la fonction au template
-  getChefNom = getChefNom;
+  getChefNom        = getChefNom;
 
   constructor(
     private svc:     MenageService,
@@ -41,23 +41,26 @@ export class MenageListComponent implements OnInit {
     const s = this.searchText.toLowerCase();
     return this.menages.filter(m =>
       getChefNom(m).toLowerCase().includes(s) ||
-      m.categorie?.toLowerCase().includes(s) ||
+      m.categorie?.toLowerCase().includes(s)  ||
       m.code?.toLowerCase().includes(s)
     );
   }
 
   delete(m: Menage): void {
     this.confirm.confirm({
-      message:               `Supprimer le ménage de "${getChefNom(m)}" ?`,
-      header:                'Confirmation de suppression',
-      icon:                  'pi pi-exclamation-triangle',
-      acceptLabel:           'Supprimer',
-      rejectLabel:           'Annuler',
-      acceptButtonStyleClass:'p-button-danger',
+      message:                `Supprimer le ménage de "${getChefNom(m)}" ?`,
+      header:                 'Confirmation de suppression',
+      icon:                   'pi pi-exclamation-triangle',
+      acceptLabel:            'Supprimer',
+      rejectLabel:            'Annuler',
+      acceptButtonStyleClass: 'p-button-danger',
       accept: () => {
         this.svc.delete(m.id!).subscribe({
-          next:  () => { this.msg.add({ severity: 'success', summary: 'Succès', detail: 'Ménage supprimé' }); this.load(); },
-          error: ()  => this.msg.add({ severity: 'error', summary: 'Erreur', detail: 'Impossible de supprimer' })
+          next:  () => {
+            this.msg.add({ severity: 'success', summary: 'Succès', detail: 'Ménage supprimé' });
+            this.load();
+          },
+          error: () => this.msg.add({ severity: 'error', summary: 'Erreur', detail: 'Impossible de supprimer' })
         });
       }
     });

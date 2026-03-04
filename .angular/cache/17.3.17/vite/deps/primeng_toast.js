@@ -6,11 +6,19 @@ import {
   TimesIcon
 } from "./chunk-MGYA4KDN.js";
 import {
-  TimesCircleIcon
-} from "./chunk-MTNFXPQR.js";
+  Ripple,
+  RippleModule
+} from "./chunk-ZGGW42XL.js";
 import {
   CheckIcon
 } from "./chunk-CQYTLM7H.js";
+import {
+  DomHandler
+} from "./chunk-JZQAVOZS.js";
+import {
+  TimesCircleIcon
+} from "./chunk-MTNFXPQR.js";
+import "./chunk-XKKAC6OT.js";
 import {
   animate,
   animateChild,
@@ -20,14 +28,6 @@ import {
   transition,
   trigger
 } from "./chunk-DRC22FPP.js";
-import {
-  Ripple,
-  RippleModule
-} from "./chunk-ZGGW42XL.js";
-import "./chunk-XKKAC6OT.js";
-import {
-  DomHandler
-} from "./chunk-JZQAVOZS.js";
 import {
   MessageService,
   PrimeNGConfig,

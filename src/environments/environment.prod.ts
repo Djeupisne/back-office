@@ -1,4 +1,5 @@
+// src/environments/environment.prod.ts
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:9000'
+  apiUrl: 'https://votre-domaine-production.com'  // URL de production
 };

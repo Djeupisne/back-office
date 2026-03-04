@@ -1,9 +1,15 @@
 import {
+  MinusIcon
+} from "./chunk-NCLYVK72.js";
+import {
   PlusIcon
 } from "./chunk-27XXR3D5.js";
 import {
-  MinusIcon
-} from "./chunk-NCLYVK72.js";
+  Ripple,
+  RippleModule
+} from "./chunk-ZGGW42XL.js";
+import "./chunk-JZQAVOZS.js";
+import "./chunk-XKKAC6OT.js";
 import {
   animate,
   state,
@@ -11,12 +17,6 @@ import {
   transition,
   trigger
 } from "./chunk-DRC22FPP.js";
-import {
-  Ripple,
-  RippleModule
-} from "./chunk-ZGGW42XL.js";
-import "./chunk-XKKAC6OT.js";
-import "./chunk-JZQAVOZS.js";
 import {
   Footer,
   PrimeTemplate,

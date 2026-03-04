@@ -1,44 +1,24 @@
-// core/guards/role.guard.ts
+// src/app/core/guards/role.guard.ts
+// FICHIER MANQUANT - reference dans app-routing.module.ts
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, ActivatedRouteSnapshot } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class RoleGuard implements CanActivate {
-
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private auth: AuthService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
-    // Accepter soit 'role' (singulier) soit 'roles' (pluriel)
-    const requiredRole = route.data['role'];
-    const requiredRoles = route.data['roles'] as string[];
-
-    const userRole = this.authService.getRole();
-
-    // Si aucun rôle requis, accès autorisé
-    if (!requiredRole && (!requiredRoles || requiredRoles.length === 0)) {
+    const expectedRoles: string[] = route.data['roles'] ?? [];
+    const userRole = this.auth.getRole();
+    if (userRole && (expectedRoles.length === 0 || expectedRoles.includes(userRole))) {
       return true;
     }
-
-    // Vérifier le rôle singulier
-    if (requiredRole && userRole === requiredRole) {
-      return true;
-    }
-
-    // Vérifier le tableau de rôles
-    if (requiredRoles && requiredRoles.length > 0 && userRole && requiredRoles.includes(userRole)) {
-      return true;
-    }
-
-    // Rediriger selon le rôle
-    if (userRole === 'AGENT') {
-      this.router.navigate(['/dashboard']);
-    } else if (userRole === 'CHEF_MENAGE') {
-      this.router.navigate(['/dashboard']); // Rediriger vers dashboard au lieu de mon-menage
-    } else {
-      this.router.navigate(['/auth/login']);
-    }
-
+    this.router.navigate(['/auth/login']);
     return false;
   }
 }
+
+// USAGE dans app-routing.module.ts:
+// { path: 'agent', canActivate: [AuthGuard, RoleGuard], data: { roles: ['AGENT'] }, ... }
+// { path: 'chef', canActivate: [AuthGuard, RoleGuard], data: { roles: ['CHEF_MENAGE'] }, ... }

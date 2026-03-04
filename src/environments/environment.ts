@@ -1,4 +1,5 @@
+// src/environments/environment.ts
 export const environment = {
   production: false,
-  apiUrl: ''  // Proxy redirige vers http://localhost:9000
+  apiUrl: 'http://localhost:9000'  // URL de votre backend
 };

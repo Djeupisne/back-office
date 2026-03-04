@@ -1,8 +1,10 @@
 {
-  "/api": {
+  "/auth-api": {
     "target": "http://localhost:9000",
     "secure": false,
     "changeOrigin": true,
-    "logLevel": "debug"
+    "pathRewrite": {
+      "^/auth-api": "/api/v1"
+    }
   }
 }

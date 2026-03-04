@@ -6,25 +6,25 @@ import {
   TimesIcon
 } from "./chunk-MGYA4KDN.js";
 import {
+  AutoFocus,
+  AutoFocusModule
+} from "./chunk-VY5JYO67.js";
+import {
+  ConnectedOverlayScrollHandler,
+  DomHandler
+} from "./chunk-JZQAVOZS.js";
+import {
+  BaseIcon
+} from "./chunk-XKKAC6OT.js";
+import {
+  NG_VALUE_ACCESSOR
+} from "./chunk-HTZ36MZ2.js";
+import {
   animate,
   style,
   transition,
   trigger
 } from "./chunk-DRC22FPP.js";
-import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-HTZ36MZ2.js";
-import {
-  AutoFocus,
-  AutoFocusModule
-} from "./chunk-VY5JYO67.js";
-import {
-  BaseIcon
-} from "./chunk-XKKAC6OT.js";
-import {
-  ConnectedOverlayScrollHandler,
-  DomHandler
-} from "./chunk-JZQAVOZS.js";
 import {
   OverlayService,
   PrimeNGConfig,
