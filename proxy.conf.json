@@ -1,11 +1,13 @@
 {
-  "/auth-api/v1": {
-    "target": "https://zany-space-orbit-g4rw6p9w56q5cvp4j-9000.app.github.dev",
+  "/auth-api": {
+    "target": "https://obscure-computing-machine-jj7w9g6w4449c5xq9-9000.app.github.dev",
     "secure": true,
     "changeOrigin": true,
-    "logLevel": "debug",
-    "pathRewrite": {
-      "^/auth-api/v1": "/api/auth"
-    }
+    "pathRewrite": { "^/auth-api": "/api/v1/auth" }
+  },
+  "/api": {
+    "target": "https://obscure-computing-machine-jj7w9g6w4449c5xq9-9000.app.github.dev",
+    "secure": true,
+    "changeOrigin": true
   }
 }
